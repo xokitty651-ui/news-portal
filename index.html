@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Portal</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --surface: rgba(255, 215, 0, .08);
+            --card: rgba(255, 255, 255, .04);
+            --text: #f8f5e6;
+            --muted: #d4af37;
+            --accent: #c9a227;
+            --accent2: #ffd700;
+            --border: rgba(255, 215, 0, .18)
+        }
+
+        body.light {
+            --bg: #fffaf0;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --muted: #8b6f00;
+            --accent: #b8860b;
+            --accent2: #ffd700;
+            --border: #f1e2a8
+        }
+sss
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        body {
+            font-family: Inter, Arial, sans-serif;
+            background: radial-gradient(circle at top right, #172554, transparent 35%), radial-gradient(circle at left, #0f766e, transparent 25%), var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: .3s
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(14px);
+            background: rgba(15, 23, 42, .55);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 28px
+        }
+
+        .light .nav {
+            background: rgba(255, 255, 255, .75)
+        }
+
+        .brand {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: .4px
+        }
+
+        .brand span {
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .18)
+        }
+
+        .hero {
+            max-width: 1200px;
+            margin: auto;
+            padding: 34px 22px 12px
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem, 4vw, 3.5rem);
+            line-height: 1.05;
+            margin-bottom: 10px
+        }
+
+        .hero p {
+            color: var(--muted);
+            max-width: 700px
+        }
+
+        .ticker {
+            margin-top: 18px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px;
+            overflow: hidden
+        }
+
+        .ticker span {
+            display: inline-block;
+            padding-left: 100%;
+            white-space: nowrap;
+            animation: move 24s linear infinite
+        }
+
+        @keyframes move {
+            to {
+                transform: translateX(-100%)
+            }
+        }
+
+        .wrap {
+            max-width: 1200px;
+            margin: auto;
+            padding: 22px
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 14px;
+            margin-bottom: 22px
+        }
+
+        .field,
+        .select {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 14px;
+            border-radius: 16px;
+            color: var(--text);
+            outline: none
+        }
+
+        .select {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            font-weight: 700;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, .12);
+            cursor: pointer
+        }
+
+        .select option {
+            background: #ffffff;
+            color: #0f172a
+        }
+
+        body:not(.light) .select option {
+            background: #111827;
+            color: #ffffff
+        }
+
+        .suggest {
+            position: relative
+        }
+
+        .suggest-box {
+            position: absolute;
+            top: 110%;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden
+        }
+
+        .item {
+            padding: 12px 14px;
+            cursor: pointer
+        }
+
+        .item:hover {
+            background: rgba(255, 255, 255, .08)
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .18);
+            transition: .25s
+        }
+
+        .card:hover {
+            transform: translateY(-6px)
+        }
+
+        .thumb {
+            width: 100%;
+            height: 210px;
+            object-fit: cover
+        }
+
+        .content {
+            padding: 18px
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: .75rem;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: var(--surface);
+            color: var(--muted);
+            margin-bottom: 10px
+        }
+
+        .title {
+            font-size: 1.15rem;
+            font-weight: 800;
+            line-height: 1.4;
+            margin-bottom: 10px
+        }
+
+        .meta {
+            font-size: .82rem;
+            color: var(--muted);
+            margin-bottom: 12px
+        }
+
+        .desc {
+            font-size: .96rem;
+            line-height: 1.65;
+            margin-bottom: 16px;
+            color: var(--text)
+        }
+
+        .read {
+            display: inline-block;
+            padding: 10px 14px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: #fff;
+            font-weight: 700
+        }
+
+        .status {
+            text-align: center;
+            color: var(--muted);
+            margin-top: 20px
+        }
+
+        .footer {
+            text-align: center;
+            padding: 28px;
+            color: var(--muted)
+        }
+
+        @media(max-width:900px) {
+            .controls {
+                grid-template-columns: 1fr 1fr
+            }
+
+            .btn.full {
+                grid-column: span 2
+            }
+        }
+
+        @media(max-width:620px) {
+            .controls {
+                grid-template-columns: 1fr
+            }
+
+            .btn.full {
+                grid-column: auto
+            }
+
+            .nav {
+                padding: 14px 18px
+            }
+
+            .hero,
+            .wrap {
+                padding-left: 16px;
+                padding-right: 16px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class='nav'>
+        <div class='brand'>📰 <span>Orbit Daily</span></div><button class='btn'
+            onclick='document.body.classList.toggle("light")'>Theme</button>
+    </nav>
+    <section class='hero'>
+        <h1>Stay informed with clarity.</h1>
+        <p>Elegant headlines, curated categories, instant search, and a clean reading experience.</p>
+        <div class='ticker'><span id='ticker'>Loading breaking headlines...</span></div>
+    </section>
+    <section class='wrap'>
+        <div class='controls'>
+            <div class='suggest'><input class='field' id='search' placeholder='Search topics...'
+                    oninput='suggestions(this.value)'>
+                <div class='suggest-box' id='box'></div>
+            </div>
+            <select class='select' id='category'>
+                <option value='general'>General</option>
+                <option value='technology'>Technology</option>
+                <option value='business'>Business</option>
+                <option value='sports'>Sports</option>
+                <option value='health'>Health</option>
+            </select>
+            <select class='select' id='country'>
+                <option value='us'>United States</option>
+                <option value='in'>India</option>
+                <option value='gb'>United Kingdom</option>
+            </select>
+            <button class='btn full' onclick='loadNews()'>Explore</button>
+        </div>
+        <div class='grid' id='grid'></div>
+        <div class='status' id='status'>Ready to load stories.</div>
+    </section>
+    <div class='footer'>Designed with clean glassmorphism aesthetics.</div>
+    <script>
+        const words = ['AI', 'Startups', 'Climate', 'Finance', 'Space', 'Design', 'Cricket', 'Health', 'Crypto', 'Gaming'];
+        function suggestions(v) { const b = document.getElementById('box'); if (!v) { b.innerHTML = ''; return; } b.innerHTML = words.filter(x => x.toLowerCase().includes(v.toLowerCase())).map(x => `<div class='item' onclick="pick('${x}')">${x}</div>`).join(''); }
+        function pick(v) { search.value = v; box.innerHTML = ''; loadNews(); }
+        async function loadNews() { const q = search.value.trim(); const cat = category.value; const c = country.value; grid.innerHTML = ''; status.textContent = 'Loading stories...'; try { let url = `https://gnews.io/api/v4/top-headlines?country=${c}&topic=${cat}&lang=en&max=12&apikey=76d24f87f68092a887e65e218ec2ed9c`; if (q) url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(q)}&lang=en&max=12&apikey=76d24f87f68092a887e65e218ec2ed9c`; const r = await fetch(url); const d = await r.json(); if (!d.articles) throw new Error(); ticker.textContent = 'Breaking: ' + d.articles.slice(0, 6).map(a => a.title).join(' ✦ '); grid.innerHTML = d.articles.map(a => `<article class='card'><img class='thumb' src='${a.image || 'https://via.placeholder.com/600x400?text=News'}'><div class='content'><div class='tag'>${cat}</div><div class='title'>${a.title}</div><div class='meta'>${a.source.name} • ${new Date(a.publishedAt).toLocaleString()}</div><div class='desc'>${a.description || 'Tap below to read the full article.'}</div><a class='read' href='${a.url}' target='_blank'>Read Article</a></div></article>`).join(''); status.textContent = 'Latest stories updated.'; } catch (e) { status.textContent = 'Unable to fetch news. Add your API key.'; } }
+        loadNews();
+    </script>
+</body>
+
+</html>
