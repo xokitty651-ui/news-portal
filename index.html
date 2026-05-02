@@ -27,7 +27,7 @@
             --accent2: #ffd700;
             --border: #f1e2a8
         }
-sss
+
         * {
             margin: 0;
             padding: 0;
@@ -341,9 +341,78 @@ sss
     <div class='footer'>Designed with clean glassmorphism aesthetics.</div>
     <script>
         const words = ['AI', 'Startups', 'Climate', 'Finance', 'Space', 'Design', 'Cricket', 'Health', 'Crypto', 'Gaming'];
-        function suggestions(v) { const b = document.getElementById('box'); if (!v) { b.innerHTML = ''; return; } b.innerHTML = words.filter(x => x.toLowerCase().includes(v.toLowerCase())).map(x => `<div class='item' onclick="pick('${x}')">${x}</div>`).join(''); }
-        function pick(v) { search.value = v; box.innerHTML = ''; loadNews(); }
-        async function loadNews() { const q = search.value.trim(); const cat = category.value; const c = country.value; grid.innerHTML = ''; status.textContent = 'Loading stories...'; try { let url = `https://gnews.io/api/v4/top-headlines?country=${c}&topic=${cat}&lang=en&max=12&apikey=76d24f87f68092a887e65e218ec2ed9c`; if (q) url = `https://gnews.io/api/v4/search?q=${encodeURIComponent(q)}&lang=en&max=12&apikey=76d24f87f68092a887e65e218ec2ed9c`; const r = await fetch(url); const d = await r.json(); if (!d.articles) throw new Error(); ticker.textContent = 'Breaking: ' + d.articles.slice(0, 6).map(a => a.title).join(' ✦ '); grid.innerHTML = d.articles.map(a => `<article class='card'><img class='thumb' src='${a.image || 'https://via.placeholder.com/600x400?text=News'}'><div class='content'><div class='tag'>${cat}</div><div class='title'>${a.title}</div><div class='meta'>${a.source.name} • ${new Date(a.publishedAt).toLocaleString()}</div><div class='desc'>${a.description || 'Tap below to read the full article.'}</div><a class='read' href='${a.url}' target='_blank'>Read Article</a></div></article>`).join(''); status.textContent = 'Latest stories updated.'; } catch (e) { status.textContent = 'Unable to fetch news. Add your API key.'; } }
+        
+        function suggestions(v) {
+            const b = document.getElementById('box');
+            if (!v) {
+                b.innerHTML = '';
+                return;
+            }
+            b.innerHTML = words.filter(x => x.toLowerCase().includes(v.toLowerCase()))
+                .map(x => `<div class='item' onclick='pick("${x}")'>${x}</div>`)
+                .join('');
+        }
+        
+        function pick(v) {
+            document.getElementById('search').value = v;
+            document.getElementById('box').innerHTML = '';
+            loadNews();
+        }
+        
+        async function loadNews() {
+            const q = document.getElementById('search').value.trim();
+            const cat = document.getElementById('category').value;
+            const c = document.getElementById('country').value;
+            const grid = document.getElementById('grid');
+            const status = document.getElementById('status');
+            
+            grid.innerHTML = '';
+            status.textContent = 'Loading stories...';
+            
+            try {
+                let url = `https://newsapi.org/v2/top-headlines?apiKey=YOUR_API_KEY&country=${c}&category=${cat}`;
+                if (q) url += `&q=${encodeURIComponent(q)}`;
+                
+                const res = await fetch(url);
+                const data = await res.json();
+                const arts = data.articles || [];
+                
+                if (!arts.length) {
+                    status.textContent = 'No stories found.';
+                    return;
+                }
+                
+                grid.innerHTML = arts.map(a => `
+                    <div class='card'>
+                        <img src='${a.urlToImage || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='320' height='210'%3E%3Crect fill='%23333' width='320' height='210'/%3E%3C/svg%3E"}' class='thumb'>
+                        <div class='content'>
+                            <span class='tag'>${cat}</span>
+                            <h2 class='title'>${a.title}</h2>
+                            <p class='meta'>${new Date(a.publishedAt).toLocaleDateString()}</p>
+                            <p class='desc'>${a.description || 'No description available.'}</p>
+                            <a href='${a.url}' target='_blank' class='read'>Read More</a>
+                        </div>
+                    </div>
+                `).join('');
+                status.textContent = '';
+            } catch(e) {
+                status.textContent = 'Error loading news. Try again.';
+                console.error(e);
+            }
+        }
+        
+        async function loadTicker() {
+            try {
+                const res = await fetch('https://newsapi.org/v2/top-headlines?apiKey=YOUR_API_KEY&country=us');
+                const data = await res.json();
+                const headlines = data.articles?.slice(0, 5).map(a => a.title).join(' • ') || 'Breaking news loading...';
+                document.getElementById('ticker').textContent = headlines;
+            } catch(e) {
+                console.error(e);
+            }
+        }
+        
+        loadTicker();
         loadNews();
     </script>
 </body>
